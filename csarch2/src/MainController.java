@@ -34,7 +34,6 @@ public class MainController implements ActionListener
         int ep = Integer.parseInt(exponent, 2);
         int e = ep - 1023;
         char finalsign = '+';
-        System.out.println(binary.equals("0000000000000000000000000000000000000000000000000000") + " check this");
         String binTrim = removeZeros(binary);
         binary_length = binTrim.length();
 
@@ -105,6 +104,10 @@ public class MainController implements ActionListener
         sign = bin.substring(0,1);
         exponent = bin.substring(1,12);
         binary = bin.substring(12,bin.length());
+
+        System.out.printf("Sign: %s\n", sign);
+        System.out.printf("Binary: %s\n", binary);
+        System.out.printf("Exponent: %s\n", exponent);
         return bin;
     }
 
@@ -127,7 +130,7 @@ public class MainController implements ActionListener
     private static float getFinalFloat(float decimal, int exp) {
         float finaldecimal = 0;
 
-        int multiplier = 1;
+        float multiplier = 1;
 
         if (exp > 0) {
             for(int i = 1; i <= exp; i++) {
@@ -139,7 +142,7 @@ public class MainController implements ActionListener
         }
         else if (exp < 0) {
             for(int i = -1; i >= exp; i--) {
-                multiplier *= 2;
+                multiplier /= 2;
             }
 
             finaldecimal = decimal * multiplier;
@@ -186,6 +189,7 @@ public class MainController implements ActionListener
         BigDecimal bd1 = bd.movePointRight(binary_length);
         int binary = bd1.intValue();
         int exp = Integer.parseInt(arr[1].substring(2));
+        System.out.println(exp + " exponent");
         int[] fractional = new int[binary_length + 1];
         float decimal = 0;
 
@@ -193,11 +197,13 @@ public class MainController implements ActionListener
             fractional[(binary_length) - i] = binary % 10;
             binary /= 10;
         }
+        System.out.println(binary + " binary");
 
         for (int i = 0; i < binary_length+1; i++) {
             double divisor = Math.pow(2, i);
             decimal += fractional[i]/divisor;
         }
+        System.out.println(decimal + " decimal");
 
         if(exp == 0)
         {
@@ -224,7 +230,6 @@ public class MainController implements ActionListener
             if(fnorm < 1){
                 ctr--;
                 fnorm = fnorm * 10;
-                return "";
             }
         }
         return String.valueOf(fnorm) + "x10^" + ctr;
@@ -427,8 +432,11 @@ public class MainController implements ActionListener
                     hexToBinary(hexadecimal);
                 }
                 result = normalize();
+                System.out.printf("normalized: %s\n", result);
                 result = getFinalDecimal(result);
+                System.out.printf("Final decimal: %s\n", result);
                 result = getFixedFloat(result);
+                System.out.printf("fixed float: %s\n", result);
                 GUI.setDecimalOutput_textField().setText(result);
             }
 
